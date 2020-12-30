@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
 import argparse
 import os
 import numpy as np
@@ -7,7 +8,7 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
-from azureml.core.run import Run, Dataset
+from azureml.core.run import Run
 from azureml.core.workspace import Workspace
 
 
