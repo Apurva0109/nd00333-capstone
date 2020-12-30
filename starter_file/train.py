@@ -1,4 +1,4 @@
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 import argparse
 import os
 import numpy as np
@@ -7,70 +7,120 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
-from azureml.core.run import Run
-from azureml.data.dataset_factory import TabularDatasetFactory
+from azureml.core.run import Run, Dataset
+from azureml.core.workspace import Workspace
 
-
-# TODO: Create TabularDataset using TabularDatasetFactory
-# Data is located at:
-# "https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
-
-path_to_csv_file="https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv"
-
-ds = TabularDatasetFactory.from_delimited_files(path=path_to_csv_file)
-print(ds)
 
 run = Run.get_context()
+ws = run.experiment.workspace
+found = False
+key = "Credit-Card-Churners"
+description_text = "Credit Card Churners DataSet for Udacity Capstone"
+
+if key in ws.datasets.keys():
+        found = True
+        dataset = ws.datasets[key]
+
+def binary_encode(df, column, positive_value):
+    df = df.copy()
+    df[column] = df[column].apply(lambda x: 1 if x == positive_value else 0)
+    return df
+
+def ordinal_encode(df, column, ordering):
+    df = df.copy()
+    df[column] = df[column].apply(lambda x: ordering.index(x))
+    return df
+
+def onehot_encode(df, column, prefix):
+    df = df.copy()
+    dummies = pd.get_dummies(df[column], prefix=prefix)
+    df = pd.concat([df, dummies], axis=1)
+    df = df.drop(column, axis=1)
+    return df
 
 def clean_data(data):
-    # Dict for cleaning data
-    months = {"jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12}
-    weekdays = {"mon":1, "tue":2, "wed":3, "thu":4, "fri":5, "sat":6, "sun":7}
-
     # Clean and one hot encode data
     x_df = data.to_pandas_dataframe().dropna()
-    jobs = pd.get_dummies(x_df.job, prefix="job")
-    x_df.drop("job", inplace=True, axis=1)
-    x_df = x_df.join(jobs)
-    x_df["marital"] = x_df.marital.apply(lambda s: 1 if s == "married" else 0)
-    x_df["default"] = x_df.default.apply(lambda s: 1 if s == "yes" else 0)
-    x_df["housing"] = x_df.housing.apply(lambda s: 1 if s == "yes" else 0)
-    x_df["loan"] = x_df.loan.apply(lambda s: 1 if s == "yes" else 0)
-    contact = pd.get_dummies(x_df.contact, prefix="contact")
-    x_df.drop("contact", inplace=True, axis=1)
-    x_df = x_df.join(contact)
-    education = pd.get_dummies(x_df.education, prefix="education")
-    x_df.drop("education", inplace=True, axis=1)
-    x_df = x_df.join(education)
-    x_df["month"] = x_df.month.map(months)
-    x_df["day_of_week"] = x_df.day_of_week.map(weekdays)
-    x_df["poutcome"] = x_df.poutcome.apply(lambda s: 1 if s == "success" else 0)
 
-    y_df = x_df.pop("y").apply(lambda s: 1 if s == "yes" else 0)
+    # Drop last two columns (unneeded)
+    x_df.drop(x_df.columns[-2:],inplace=True, axis=1)
 
-    return x_df, y_df
+    # Drop CLIENTNUM columns
+    x_df.drop("CLIENTNUM",inplace=True, axis=1)
 
+    # Encode unknown values as np.NaN
+    x_df = x_df.replace('Unknown', np.NaN)
+
+    # Fill ordinal missing values with modes (Education_Level and Income_Category columns)
+    x_df['Education_Level'] = x_df['Education_Level'].fillna('Graduate')
+    x_df['Income_Category'] = x_df['Income_Category'].fillna('Less than $40K')
+
+    # Encode binary columns
+    x_df = binary_encode(x_df, 'Attrition_Flag', positive_value='Attrited Customer')
+    x_df = binary_encode(x_df, 'Gender', positive_value='M')
+
+    # Encode ordinal columns
+    education_ordering = [
+        'Uneducated',
+        'High School',
+        'College',
+        'Graduate',
+        'Post-Graduate',
+        'Doctorate'
+    ]
+    income_ordering = [
+        'Less than $40K',
+        '$40K - $60K',
+        '$60K - $80K',
+        '$80K - $120K',
+        '$120K +'
+    ]
+
+    x_df = ordinal_encode(x_df, 'Education_Level', ordering=education_ordering)
+    x_df = ordinal_encode(x_df, 'Income_Category', ordering=income_ordering)
+
+    # Encode nominal columns
+    x_df = onehot_encode(x_df, 'Marital_Status', prefix='Marital_Status')
+    x_df = onehot_encode(x_df, 'Card_Category', prefix='Card_Category')
+
+    # Split df into X and y
+    X = x_df.drop('Attrition_Flag', axis=1).copy()
+    y = x_df['Attrition_Flag'].copy()
+
+    # Scale X with a standard scaler
+    scaler = StandardScaler()
+    X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+
+    return X, y
 
 def main():
     # Add arguments to script
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--C', type=float, default=1.0, help="Inverse of regularization strength. Smaller values cause stronger regularization")
-    parser.add_argument('--max_iter', type=int, default=100, help="Maximum number of iterations to converge")
+    parser.add_argument('--n_estimators', type=int, default=100, help="Number of trees in the forest")
+    parser.add_argument('--max_depth', type=int, default=None, help="The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.")
+    parser.add_argument('--min_samples_split', type=int, default=2, help="The minimum number of samples required to split an internal node.")
+    parser.add_argument('--min_samples_leaf', type=int, default=1, help="The minimum number of samples required to be at a leaf node.")
 
     args = parser.parse_args()
 
-    run.log("Regularization Strength:", np.float(args.C))
-    run.log("Max iterations:", np.int(args.max_iter))
+    if args.max_depth == 0:
+        max_depth = None
+    else:
+        max_depth = args.max_depth
 
-    x, y = clean_data(ds)
+    run.log("Num Estimators:", np.float(args.n_estimators))
+    run.log("Max Depth:", max_depth)
+    run.log("Min Samples Split:", np.int(args.min_samples_split))
+    run.log("Min Samples Leaf:", np.int(args.min_samples_leaf))
+
+    x, y = clean_data(dataset)
 
     # TODO: Split data into train and test sets.
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,random_state=0)
 
-
-    # Train Logistic Regression Model
-    model = LogisticRegression(C=args.C, max_iter=args.max_iter).fit(x_train, y_train)
+    # Train Random Forest Model
+    model = RandomForestClassifier(n_estimators=args.n_estimators,max_depth=args.max_depth,min_samples_split=args.min_samples_split,min_samples_leaf=args.min_samples_leaf).fit(x_train, y_train)
 
     # calculate accuracy
     Accuracy = model.score(x_test, y_test)
