@@ -12,14 +12,13 @@ def init():
     model_path = os.path.join(os.getenv('AZUREML_MODEL_DIR'), 'automl.joblib')
     model = joblib.load(model_path)
 
-def run(data):
+def run(input_data):
     try:
-        #data = np.array(json.loads(data))
-        data = json.loads(data)['data']
-        data = pd.DataFrame.from_dict(data)
+        data = json.loads(input_data)['data']
+        data = np.array(data)
         result = model.predict(data)
-        # You can return any data type, as long as it is JSON serializable.
-        return result.tolist()
+        return json.dumps({"result": result.tolist()})
     except Exception as e:
-        error = str(e)
-        return error
+        result = str(e)
+        # return error message back to the client
+        return json.dumps({"error": result})
