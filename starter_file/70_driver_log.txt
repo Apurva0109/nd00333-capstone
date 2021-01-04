@@ -1,0 +1,21 @@
+2021/01/04 14:49:28 Attempt 1 of http call to http://10.0.0.4:16384/sendlogstoartifacts/info
+2021/01/04 14:49:28 Attempt 1 of http call to http://10.0.0.4:16384/sendlogstoartifacts/status
+[2021-01-04T14:49:30.239963] Entering context manager injector.
+[context_manager_injector.py] Command line Options: Namespace(inject=['ProjectPythonPath:context_managers.ProjectPythonPath', 'RunHistory:context_managers.RunHistory', 'TrackUserError:context_managers.TrackUserError'], invocation=['train.py', '--max_depth', '25', '--min_samples_leaf', '2', '--min_samples_split', '2', '--n_estimators', '64'])
+Script type = None
+Starting the daemon thread to refresh tokens in background for process with pid = 95
+Entering Run History Context Manager.
+[2021-01-04T14:49:32.775567] Current directory: /mnt/batch/tasks/shared/LS_root/jobs/quick-starts-ws-133333/azureml/hd_5d308bf7-09e5-4da1-a72e-e3dc5ddd4b47_2/mounts/workspaceblobstore/azureml/HD_5d308bf7-09e5-4da1-a72e-e3dc5ddd4b47_2
+[2021-01-04T14:49:32.775717] Preparing to call script [train.py] with arguments:['--max_depth', '25', '--min_samples_leaf', '2', '--min_samples_split', '2', '--n_estimators', '64']
+[2021-01-04T14:49:32.775793] After variable expansion, calling script [train.py] with arguments:['--max_depth', '25', '--min_samples_leaf', '2', '--min_samples_split', '2', '--n_estimators', '64']
+
+Starting the daemon thread to refresh tokens in background for process with pid = 95
+
+
+[2021-01-04T14:49:49.990708] The experiment completed successfully. Finalizing run...
+Cleaning up all outstanding Run operations, waiting 900.0 seconds
+2 items cleaning up...
+Cleanup took 0.1348743438720703 seconds
+[2021-01-04T14:49:50.851306] Finished context manager injector.
+2021/01/04 14:49:55 Attempt 1 of http call to http://10.0.0.4:16384/sendlogstoartifacts/status
+2021/01/04 14:49:55 Process Exiting with Code:  0
