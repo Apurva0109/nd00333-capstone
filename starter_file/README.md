@@ -300,7 +300,7 @@ Automate ML model gives better result so we deployed the best run of AutoML.
 
 ![](automl_model/automl_experiment_screenshots/AutoML_prediction_nb.PNG)
 ## Screen Recording
-[Screencast]()
+[Screencast](https://drive.google.com/file/d/1GPBWJJvW0_9Z-5SicQOmTTHVuaBHHL_Q/view)
 
 ## Standout Suggestions
 * For hyperdrive,
