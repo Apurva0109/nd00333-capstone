@@ -193,17 +193,11 @@ It represents the configuration for submitting an autoML experiment and contains
       **automl_settings
 ```
 <br>
-
     *experiment_timeout_minutes:* Time limit in minutes for the experiment.
-
     *primary_metric:* Metric that you want to optimize. The best-fit model will be chosen based on this metric.
-
     *label_column_name:* The name of the label column whose value your model will predict.
-
     *n_cross_validations:* Number of cross-validation splits to perform when validation data is not specified.
-
     *max_cores_per_iteration:* The maximum number of threads to use for a given training iteration.-1, which means to use all the possible cores per iteration per child-run.
-
     *max_concurrent_iterations:* Represents the maximum number of iterations that would be executed in parallel.
 
 * Submit AutoML experiment and show results with the RunDetails.
