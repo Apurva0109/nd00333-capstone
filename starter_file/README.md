@@ -6,13 +6,13 @@ This project is part of the Udacity Azure ML Nanodegree. In this project, we bui
 
 ## Dataset
 
-In this project we consider the Credit Card Customer dataset from [kaggle](https://www.kaggle.com/sakshigoyal7/credit-card-customers/notebooks).
+In this project, we consider the Credit Card Customer dataset from [kaggle](https://www.kaggle.com/sakshigoyal7/credit-card-customers/notebooks).
 
-A bank manager is uncomfortable with more and more customers leaving their credit card services. They would really appreciate it if someone could predict who will be affected so that they can proactively go to the customer to provide them with better services and turn customer decisions in the opposite direction.
+A bank manager is uncomfortable with more and more customers leaving their credit card services. They would appreciate it if someone could predict who will be affected so that they can proactively go to the customer to provide them with better services and turn customer decisions in the opposite direction.
 
- This data set consists of 10,000 customers mentioning their age, salary, status marital, credit card limit, credit card category, etc.
+ This dataset consists of 10,000 customers mentioning their age, salary, status marital, credit card limit, credit card category, etc.
 
- The objective is to know the behaviour of the variables and to analyze attributes that indicate a strong relationship with the cancellation of credit card service customers.
+ The objective is to know the behavior of the variables and to analyze attributes that indicate a strong relationship with the cancellation of credit card service customers.
 
 __Input Variables:__ age, salary, status marital, credit card limit, credit card category, etc.
 
@@ -20,10 +20,10 @@ __Input Variables:__ age, salary, status marital, credit card limit, credit card
 Attrition_Flag - Has the customer close the account? (binary: “1”, means “Yes”, “0” means “No”)
 
 ### Task
-In this project, we will build prediction model using Hyperdrive and AutoML that will classify if a customer is going to churn or not.
+In this project, we will build a prediction model using Hyperdrive and AutoML that will classify if a customer is going to churn or not.
 
 ### Access
-Data set was downloaded as a csv and uploaded on the GitHub and then registered it in the workspace. Dataset can be accessed using **Dataset_get_by_name(ws,dataset_name)**
+The dataset was downloaded as a CSV and uploaded on GitHub and then registered in the workspace. Dataset can be accessed using **Dataset_get_by_name(ws,dataset_name)**
 
 ![](hyperdrive_model/hyperdrive_experiment_screenshots/Registered_dataset.PNG)
 
@@ -39,7 +39,7 @@ We solved this problem with two different methods -
 Steps performed in train.py are:
 
 * Import all the dependencies
-* Set up workspace and initialize an experiment
+* Set up a workspace and initialize an experiment
 * Load registered dataset from workspace using **Dataset_get_by_name(ws,dataset_name)**
 * Clean data using clean_data function, which involves -
     * Converting categorical variable to binary using one-hot encoding.
@@ -49,12 +49,12 @@ Steps performed in train.py are:
 * Compute accuracy for train data using Scikit learn model.
 * Save the model in the folder outputs/model.joblib
 
-In this project, we used Random Forest, that belongs to the supervised learning technique. It can be used for both Classification and Regression problems in ML. It is based on the concept of ensemble learning, which is a process of combining multiple classifiers to solve a complex problem and to improve the performance of the model.
+In this project, we used Random Forest, which belongs to the supervised learning technique. It can be used for both Classification and Regression problems in ML. It is based on the concept of ensemble learning, which is a process of combining multiple classifiers to solve a complex problem and to improve the performance of the model.
 
 Four types of hyperparameters used are-
 1. n_estimators: Defines the number of trees you want to build before taking the maximum voting or averages of predictions.
 1. max_depth: Defines the longest path between the root node and the leaf node.
-1. min_samples_split: Defines the minimum required number of observations in any given node in order to split it.
+1. min_samples_split: Defines the minimum required number of observations in any given node to split it.
 1. min_samples_leaf: Defines the minimum number of samples that should be present in the leaf node after splitting a node.
 
 We need to tune these hyperparameters, manual hyperparameter tuning is extremely time-consuming so we are using HyperDrive to find optimal hyperparameter for the random forest model.
@@ -62,7 +62,7 @@ We need to tune these hyperparameters, manual hyperparameter tuning is extremely
 Tuning hyperparameter is done in the jupyter notebook *hyperparameter_tuning.ipynb*.
 
 Steps performed in the hyperparameter_tuning.ipynb for hyperparameter tuning are:
-* Define search space: Dictionary is created with the set of hyperparameter values i.e n_estimators, max_depth, min_samples_split and min_samples_leaf.
+* Define search space: Dictionary is created with the set of hyperparameter values i.e n_estimators, max_depth, min_samples_split, and min_samples_leaf.
 ```
     param_space = {
         '--n_estimators': choice(2, 4, 8, 16, 32, 64, 200),
@@ -75,7 +75,7 @@ Steps performed in the hyperparameter_tuning.ipynb for hyperparameter tuning are
 
     Advantages of Random Parameter Sampling:
 
-    1. Random sampling is used to randomly select value so, it eliminates sampling bias.
+    1. Random sampling is used to randomly select values so, it eliminates sampling bias.
     2. It supports discrete and continuous hyperparameters.
     3. It reduces computation time.
 ```
@@ -89,7 +89,7 @@ Any run that doesn't fall within the slack factor or slack amount of the evaluat
 
 * Use ScriptRunConfig:
 Represents configuration information for submitting a training run in Azure Machine Learning.
-<br>A ScriptRunConfig packages together the configuration information needed to submit a run in Azure ML, including the script, compute target, environment, and any distributed job-specific configs.The environment is setup for the run.
+<br>A ScriptRunConfig packages together the configuration information needed to submit a run in Azure ML, including the script, compute target, environment, and any distributed job-specific configs. The environment is set up for the run.
 ```
     sklearn_env = Environment.from_conda_specification(name='sklearn-env', file_path='conda_dependencies.yml')
 
@@ -117,9 +117,10 @@ HyperDriveConfig is created using the estimator, hyperparameter sampler, and ear
 ```
 <br>
     primary primary_metric_name: The name of the primary metric reported by the experiment runs.<br>
-    primary_metric_goal: Either PrimaryMetricGoal.MINIMIZE or PrimaryMetricGoal.MAXIMIZE. This parameter determines if the
-    primary metric is to be minimized or maximized when evaluating runs.<br>
-    max_total_runs_ and _max_concurrent_runs: The maximum total number of runs to create.The maximum number of runs to execute concurrently.<br>
+
+    primary_metric_goal: Either PrimaryMetricGoal.MINIMIZE or PrimaryMetricGoal.MAXIMIZE. This parameter determines if the primary metric is to be minimized or maximized when evaluating runs.<br>
+
+    max_total_runs and max_concurrent_runs: The maximum total number of runs to create.The maximum number of runs to execute concurrently.<br>
 
 * Submit experiment:
 Submit your hyperdrive run to the experiment and show run details with the widget.
@@ -156,11 +157,11 @@ AutoML is done in the jupyter notebook *automl.ipynb*.
 Steps performed in the automl.ipynb for AutoML are:
 
 * Import all the dependencies
-* Set up workspace and initialize an experiment
+* Set up a workspace and initialize an experiment
 * Load registered dataset from workspace using **Dataset_get_by_name(ws,dataset_name)**
 * Prepare data: We have defined *pre_processing* function which returns features and targets as DataFrame and Series, respectively.
 * Concatenated data returned from pre_processing function in Dataframe, all_data.
-* Split the data into train and test sets in the ratio 80% and 20% respectively.
+* Split the data into train and test sets in the ratio of 80% and 20% respectively.
 * Save the training data and testing data in the folder training/train_data.csv or training/test_data.csv respectively.
 * Get the datastore and upload train_data.csv and test_data.csv to the datastore and create datastore referencing.
 ```
@@ -191,13 +192,18 @@ It represents the configuration for submitting an autoML experiment and contains
       **automl_settings
 ```
 <br>
-<br>
+
     experiment_timeout_minutes: Time limit in minutes for the experiment.<br>
+
     primary_metric: Metric that you want to optimize. The best-fit model will be chosen based on this metric.<br>
+
     label_column_name: The name of the label column whose value your model will predict.<br>
+
     n_cross_validations: Number of cross-validation splits to perform when validation data is not specified.<br>
+
     max_cores_per_iteration: The maximum number of threads to use for a given training iteration.-1, which means to use all the possible cores per iteration per child-run.<br>
-    _max_concurrent_iterations:_ Represents the maximum number of iterations that would be executed in parallel.<br>
+
+    max_concurrent_iterations: Represents the maximum number of iterations that would be executed in parallel.<br>
 
 * Submit AutoML experiment and show results with the RunDetails.
 ```
@@ -205,7 +211,7 @@ It represents the configuration for submitting an autoML experiment and contains
     RunDetails(remote_run).show()
     remote_run.wait_for_completion(show_output=True)
 ```
-  * Run in workspace
+  * Run in a workspace
     * Completed run
 ![](automl_model/automl_experiment_screenshots/AutoML_run_details_ws.PNG)
 ![](automl_model/automl_experiment_screenshots/AutoML_run_details_with_no_deployment_ws.PNG)
@@ -221,13 +227,13 @@ It represents the configuration for submitting an autoML experiment and contains
     best_run, fitted_automl_best_model = remote_run.get_output()
     best_run_metrics = best_run.get_metrics()
 ```
-* Run in workspace
+* Run in a workspace
   * Best run
 ![](automl_model/automl_experiment_screenshots/AutoML_best_model_with_no_deployment_ws.PNG)   
   * Best run with Metrics
 ![](automl_model/automl_experiment_screenshots/AutoML_best_model_with_run_metrics.PNG)
 ![](automl_model/automl_experiment_screenshots/AutoML_best_model_with_chart.PNG)
-* Run in notebook
+* Run in a notebook
   * Best run
 ![](automl_model/automl_experiment_screenshots/AutoML_best_model_nb.PNG)
   * Best run with Metrics
@@ -242,7 +248,7 @@ Different types of algorithms used for classification in Azure ML are:
 
 ### Results
 
-The best of the automated ML run is voting ensemble with 0.97257 accuracy.
+The best of the automated ML run is the voting ensemble with 0.97257 accuracy.
 
 ![](automl_model/automl_experiment_screenshots/AutoML_best_model_with_no_deployment_ws.PNG)   
 
@@ -252,9 +258,9 @@ The best of the automated ML run is voting ensemble with 0.97257 accuracy.
 * AutoML &ensp;&ensp;&ensp;&ensp;: 0.97257 (best model: VotingEnsemble)
 
 ## Model Deployment
-Automate ML model gives better result so we deployed best run of AutoML.
+Automate ML model gives better result so we deployed the best run of AutoML.
 
-* Provide a scoring script that will be invoked by the web service call (using scoring.py).The scoring script must have two required functions, init() and run(input_data).
+* Provide a scoring script that will be invoked by the web service call (using scoring.py). The scoring script must have two required functions, init() and run(input_data).
 
   * init(): Loading your model
   * run():Running your model on input data
@@ -262,7 +268,7 @@ Automate ML model gives better result so we deployed best run of AutoML.
 * Provide an environment file so that Azure Machine Learning can install the necessary packages in the Docker image which are required by your scoring script.
 
 * Create InferenceConfig:
-<br>An inference configuration describes how to set up the web-service containing your model. It's used later, when you deploy the model.
+<br>An inference configuration describes how to set up the web-service containing your model. It's used later when you deploy the model.
 <br>Best run environment and score.py file is provided to the InferenceConfig. cpu_cores and memory_gb are initialized as 1 for the deployment configuration and deploy to Azure Container Instance(ACI).
 
 ```
@@ -298,7 +304,7 @@ Automate ML model gives better result so we deployed best run of AutoML.
 
 ![](automl_model/automl_experiment_screenshots/AutoML_endpoint_ws.PNG)
 
-* We can test the deployed model endpoint. We pick the first 3 samples from the test dataset, and send it to the web service hosted in ACI and see the actual and predicated values.
+* We can test the deployed model endpoint. We pick the first 3 samples from the test dataset, and send it to the web service hosted in ACI and see the actual and predicted values.
 
 ![](automl_model/automl_experiment_screenshots/AutoML_prediction_nb.PNG)
 ## Screen Recording
@@ -311,7 +317,7 @@ Automate ML model gives better result so we deployed best run of AutoML.
 
 
 * For AutoML,
-<br>Accuracy is affected due to imbalanced classes in the input, because the input data is biased towards certain classes.<br>
+<br>Accuracy is affected due to imbalanced classes in the input because the input data is biased towards certain classes.<br>
 Some of the ways you can handle imbalanced data:
 
   * Change performance matrix: Accuracy is not the metric to use when working with an imbalanced dataset because it is misleading. Metrics that can provide better insight include:
