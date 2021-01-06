@@ -118,7 +118,7 @@ HyperDriveConfig is created using the estimator, hyperparameter sampler, and ear
 <br>
     primary primary_metric_name: The name of the primary metric reported by the experiment runs.<br>
     <br>primary_metric_goal: Either PrimaryMetricGoal.MINIMIZE or PrimaryMetricGoal.MAXIMIZE. This parameter determines if the primary metric is to be minimized or maximized when evaluating runs.<br>
-    <br>max_total_runs and max_concurrent_runs: The maximum total number of runs to create.The maximum number of runs to execute concurrently.<br>
+    <br>max_total_runs and max_concurrent_runs: The maximum total number of runs to create.The maximum number of runs to execute concurrently.<br><br>
 
 * Submit experiment:
 Submit your hyperdrive run to the experiment and show run details with the widget.
@@ -190,12 +190,12 @@ It represents the configuration for submitting an autoML experiment and contains
       **automl_settings
 ```
 <br>
-    experiment_timeout_minutes: Time limit in minutes for the experiment.<br>
-    primary_metric: Metric that you want to optimize. The best-fit model will be chosen based on this metric.<br>
-    label_column_name: The name of the label column whose value your model will predict.<br>
-    n_cross_validations: Number of cross-validation splits to perform when validation data is not specified.<br>
-    max_cores_per_iteration: The maximum number of threads to use for a given training iteration.-1, which means to use all the possible cores per iteration per child-run.<br>
-    max_concurrent_iterations: Represents the maximum number of iterations that would be executed in parallel.<br>
+    <br>experiment_timeout_minutes: Time limit in minutes for the experiment.<br>
+    <br>primary_metric: Metric that you want to optimize. The best-fit model will be chosen based on this metric.<br>
+    <br>label_column_name: The name of the label column whose value your model will predict.<br>
+    <br>n_cross_validations: Number of cross-validation splits to perform when validation data is not specified.<br>
+    <br>max_cores_per_iteration: The maximum number of threads to use for a given training iteration.-1, which means to use all the possible cores per iteration per child-run.<br>
+    <br>max_concurrent_iterations: Represents the maximum number of iterations that would be executed in parallel.<br>
 
 * Submit AutoML experiment and show results with the RunDetails.
 ```
