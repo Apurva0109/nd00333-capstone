@@ -116,12 +116,10 @@ HyperDriveConfig is created using the estimator, hyperparameter sampler, and ear
                                 )
 ```
 <br>
-    primary primary_metric_name: The name of the primary metric reported by the experiment runs.
-
+    primary primary_metric_name: The name of the primary metric reported by the experiment runs.<br>
     primary_metric_goal: Either PrimaryMetricGoal.MINIMIZE or PrimaryMetricGoal.MAXIMIZE. This parameter determines if the
-    primary metric is to be minimized or maximized when evaluating runs.
-
-    max_total_runs and max_concurrent_runsThe maximum total number of runs to create.The maximum number of runs to execute concurrently.
+    primary metric is to be minimized or maximized when evaluating runs.<br>
+    max_total_runs and max_concurrent_runsThe maximum total number of runs to create.The maximum number of runs to execute concurrently.<br>
 
 * Submit experiment:
 Submit your hyperdrive run to the experiment and show run details with the widget.
