@@ -1,16 +1,15 @@
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
 import argparse
 import os
 import numpy as np
-from sklearn.metrics import mean_squared_error
 import joblib
+import pandas as pd
+from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
-import pandas as pd
 from azureml.core.run import Run
 from azureml.core.workspace import Workspace
-
 
 run = Run.get_context()
 ws = run.experiment.workspace
@@ -19,8 +18,8 @@ key = "Credit-Card-Churners"
 description_text = "Credit Card Churners DataSet for Udacity Capstone"
 
 if key in ws.datasets.keys():
-        found = True
-        dataset = ws.datasets[key]
+    found = True
+    dataset = ws.datasets[key]
 
 def binary_encode(df, column, positive_value):
     df = df.copy()
@@ -44,10 +43,10 @@ def clean_data(data):
     x_df = data.to_pandas_dataframe().dropna()
 
     # Drop last two columns (unneeded)
-    x_df.drop(x_df.columns[-2:],inplace=True, axis=1)
+    x_df.drop(x_df.columns[-2:], inplace=True, axis=1)
 
     # Drop CLIENTNUM columns
-    x_df.drop("CLIENTNUM",inplace=True, axis=1)
+    x_df.drop("CLIENTNUM", inplace=True, axis=1)
 
     # Encode unknown values as np.NaN
     x_df = x_df.replace('Unknown', np.NaN)
@@ -98,10 +97,22 @@ def main():
     # Add arguments to script
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--n_estimators', type=int, default=100, help="Number of trees in the forest")
-    parser.add_argument('--max_depth', type=int, default=None, help="The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.")
-    parser.add_argument('--min_samples_split', type=int, default=2, help="The minimum number of samples required to split an internal node.")
-    parser.add_argument('--min_samples_leaf', type=int, default=1, help="The minimum number of samples required to be at a leaf node.")
+    parser.add_argument('--n_estimators',
+                        type=int,
+                        default=100,
+                        help="Number of trees in the forest")
+    parser.add_argument('--max_depth',
+                        type=int,
+                        default=None,
+                        help="The maximum depth of the tree.")
+    parser.add_argument('--min_samples_split',
+                        type=int,
+                        default=2,
+                        help="The minimum number of samples required to split an internal node.")
+    parser.add_argument('--min_samples_leaf',
+                        type=int,
+                        default=1,
+                        help="The minimum number of samples required to be at a leaf node.")
 
     args = parser.parse_args()
 
@@ -117,11 +128,13 @@ def main():
 
     x, y = clean_data(dataset)
 
-    # TODO: Split data into train and test sets.
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,random_state=0)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 
     # Train Random Forest Model
-    model = RandomForestClassifier(n_estimators=args.n_estimators,max_depth=args.max_depth,min_samples_split=args.min_samples_split,min_samples_leaf=args.min_samples_leaf).fit(x_train, y_train)
+    model = RandomForestClassifier(n_estimators=args.n_estimators,
+                                   max_depth=args.max_depth,
+                                   min_samples_split=args.min_samples_split,
+                                   min_samples_leaf=args.min_samples_leaf).fit(x_train, y_train)
 
     # calculate accuracy
     Accuracy = model.score(x_test, y_test)

@@ -1,5 +1,20 @@
 # Train and Deploy Models with Azure ML
 
+## Table of Contents
+* [Overview](##Overview)
+* [Dataset](##Dataset)
+  * [Task](###Task)
+  * [Access](###Access)
+* [Architectural Diagram](##Architectural-Diagram)
+* [Approaches](##Approaches)
+* [Hyperparameter Tuning](##Hyperparameter-Tuning)
+  * [Result](###Result)
+* [Automated ML](##Automated-ML)
+  * [Result](###Result)
+* [Summary Results](##Summary-Results)
+* [Model Deployment](##Model-Deployment)
+* [Screen Recording](##Screen-Recording)
+
 ## Overview
 
 This project is part of the Udacity Azure ML Nanodegree. In this project, we build and optimize an Azure ML pipeline using the Python SDK and a provided Scikit-learn model. This model is then compared to an Azure AutoML run. The best model is then deployed and tested.
@@ -26,6 +41,10 @@ In this project, we will build a prediction model using Hyperdrive and AutoML th
 The dataset was downloaded as a CSV and uploaded on GitHub and then registered in the workspace. Dataset can be accessed using **Dataset_get_by_name(ws,dataset_name)**
 
 ![](hyperdrive_model/hyperdrive_experiment_screenshots/Registered_dataset.PNG)
+
+## Architectural Diagram
+
+![](hyperdrive_model/hyperdrive_experiment_screenshots/Architecutraldiagram.PNG)
 
 ## Approaches
 
@@ -142,7 +161,7 @@ Submit your hyperdrive run to the experiment and show run details with the widge
     best_run_metrics=best_run.get_metrics()
 ```
 ![](hyperdrive_model/hyperdrive_experiment_screenshots/Hyperdrive_best_run_id_nb.PNG)
-### Results
+### Result
 The best model of HyperDrive run is with 0.95261 accuracy.
 ![](hyperdrive_model/hyperdrive_experiment_screenshots/Hyperdrive_best_run_details_ws.PNG)
 ![](hyperdrive_model/hyperdrive_experiment_screenshots/Hyperdrive_best_run_chart_details_ws.PNG)
@@ -191,7 +210,8 @@ It represents the configuration for submitting an autoML experiment and contains
 ```
 <br>
     experiment_timeout_minutes: Time limit in minutes for the experiment.<br>
-    <br>primary_metric: Metric that you want to optimize. The best-fit model will be chosen based on this metric.<br>
+    <br>primary_metric: Metric that you want to optimize. The best-fit model will be chosen based on this metric.
+    <br>Accuracy is a common evaluation metric for classification problems. It’s the number of correct predictions made as a ratio of all predictions made.<br>
     <br>label_column_name: The name of the label column whose value your model will predict.<br>
     <br>n_cross_validations: Number of cross-validation splits to perform when validation data is not specified.<br>
     <br>max_cores_per_iteration: The maximum number of threads to use for a given training iteration.-1, which means to use all the possible cores per iteration per child-run.<br>
@@ -238,13 +258,13 @@ Different types of algorithms used for classification in Azure ML are:
 ![](automl_model/automl_experiment_screenshots/AutoML_various_models_nb.PNG)
 ![](automl_model/automl_experiment_screenshots/AutoML_various_models_nb2.PNG)
 
-### Results
+### Result
 
 The best of the automated ML run is the voting ensemble with 0.97257 accuracy.
 
 ![](automl_model/automl_experiment_screenshots/AutoML_best_model_with_no_deployment_ws.PNG)   
 
-### Summary Results:
+## Summary Results:
 
 * HyperDrive &ensp;: 0.95261
 * AutoML &ensp;&ensp;&ensp;&ensp;: 0.97257 (best model: VotingEnsemble)
@@ -301,21 +321,3 @@ Automate ML model gives better result so we deployed the best run of AutoML.
 ![](automl_model/automl_experiment_screenshots/AutoML_prediction_nb.PNG)
 ## Screen Recording
 [Screencast](https://drive.google.com/file/d/1GPBWJJvW0_9Z-5SicQOmTTHVuaBHHL_Q/view)
-
-## Standout Suggestions
-* For hyperdrive,
-  * Try a different combination of values for hyperparameter tuning.
-  * Instead of using random sampling you can also grid sampling.
-
-
-* For AutoML,
-<br>Accuracy is affected due to imbalanced classes in the input because the input data is biased towards certain classes.<br>
-Some of the ways you can handle imbalanced data:
-
-  * Change performance matrix: Accuracy is not the metric to use when working with an imbalanced dataset because it is misleading. Metrics that can provide better insight include:
-      * AUC_weighted
-      * Confusion Matrix
-      * Precision
-      * Recall
-      * F1 Score
-  * Use a weight column: automated ML supports a column of weights as input, causing rows in the data to be weighted up or down, which can be used to make a class more or less "important".
