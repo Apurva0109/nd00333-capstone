@@ -321,3 +321,19 @@ Automate ML model gives better result so we deployed the best run of AutoML.
 ![](automl_model/automl_experiment_screenshots/AutoML_prediction_nb.PNG)
 ## Screen Recording
 [Screencast](https://drive.google.com/file/d/1GPBWJJvW0_9Z-5SicQOmTTHVuaBHHL_Q/view)
+
+## Future Work
+
+* For scikit learn,
+  * Try a different combination of values for hyperparameter tuning.
+  * Change sampling technique: Instead of using random sampling you can also grid sampling.
+  * Evaluate other classification models.
+* For autoML,
+  * Primary metric can be changed to see if we can get better results.
+  *  We can improve the model by customizing the featurization of AutoML class. To customize the featurization step, provide a FeaturizationConfig object.
+  <br>Types preprocessing/featurization is done as follows:
+        * Categorical: Target encoding, one-hot encoding, drop high cardinality categories, impute missing values.
+        * Numeric: Impute missing values, cluster distance, the weight of evidence.
+        * DateTime: Several features such as day, seconds, minutes, hours, etc.
+        * Text: Bag of words, pre-trained Word embedding, text target encoding.
+* Feature engineering can be performed using PCA.
